@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ColorTrade — Color Demo</title>
+<style>
+:root{--purple:#7418dc;--deep:#26005f;--ink:#211044;--line:#eadbff;--bg:#f7f0ff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f2e7ff,#fff 42%);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:16px 14px 92px}
+header{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:20px;padding:13px 15px;box-shadow:0 7px 22px #5a18a51a}
+.brand{font-size:25px;font-weight:900;letter-spacing:-1px;color:#3a087c}.brand span{color:#a020e8}
+.points{background:#f2e7ff;border-radius:14px;padding:9px 12px;font-size:12px;color:#5c2a96}.points b{display:block;font-size:20px;color:#3b087d;margin-top:3px}
+.banner{margin:16px 0;background:linear-gradient(115deg,#26005f,#6d12c8 60%,#a52cf2);border-radius:22px;padding:22px 18px;color:#fff;overflow:hidden;position:relative}
+.banner:after{content:"✦";position:absolute;right:25px;top:10px;font-size:90px;color:#ffffff20}
+.banner small{color:#e6caff;font-weight:bold;letter-spacing:2px}.banner h1{font-size:27px;margin:8px 0}.banner p{margin:0;color:#f1e4ff;font-size:13px;max-width:310px;line-height:1.5}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin:13px 0;box-shadow:0 6px 20px #5a18a510}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.panel h2{font-size:17px;margin:0}.muted{font-size:12px;color:#826d9c}
+.colorgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.color{border:0;border-radius:17px;padding:15px 5px;color:white;font-weight:800;font-size:16px;cursor:pointer;box-shadow:inset 0 0 0 2px #ffffff55;transition:.15s}
+.color:active{transform:scale(.97)}.red{background:linear-gradient(145deg,#ff596d,#c90035)}.green{background:linear-gradient(145deg,#4de879,#009b47)}.violet{background:linear-gradient(145deg,#c04bff,#6500c7)}
+.color .dot{width:42px;height:42px;border-radius:50%;display:block;margin:0 auto 9px;background:radial-gradient(circle at 30% 25%,#fff9,transparent 35%),#ffffff35;border:2px solid #ffffffb0}
+.notice{font-size:12px;line-height:1.5;color:#765d92;background:#f8f1ff;border-radius:12px;padding:10px;margin-top:12px}
+.status{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px}.tag{background:#eee2ff;color:#6414bd;border-radius:20px;padding:6px 10px;font-weight:bold}
+.results{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.ball{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:white;font-size:13px;font-weight:bold;box-shadow:0 3px 8px #0002}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#fbf8ff;border:1px solid var(--line);border-radius:15px;padding:13px}.stat span{display:block;color:#826d9c;font-size:12px}.stat b{font-size:20px;display:block;margin-top:5px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#ffffffed;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:11px 4px 15px}
+nav a{text-decoration:none;color:#79678f;font-size:11px;text-align:center}nav b{display:block;font-size:19px;margin-bottom:3px;color:#6414bd}
+.toast{display:none;margin-top:10px;padding:10px;border-radius:12px;background:#e9ffef;color:#087b38;font-size:13px}
+@media(min-width:520px){.app{padding-top:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">♛ Color<span>Trade</span></div>
+  <div class="points">DEMO POINTS <b id="points">1,000</b></div>
+</header>
+
+<section class="banner">
+  <small>WELCOME TO COLORTRADE</small>
+  <h1>Explore a world of colour</h1>
+  <p>A bright, interactive colour demo. Choose a colour, explore the interface and enjoy the experience.</p>
+</section>
+
+<section class="panel">
+  <div class="panelhead"><h2>Choose your colour</h2><span class="tag">DEMO</span></div>
+  <div class="colorgrid">
+    <button class="color red" onclick="choose('Red')"><span class="dot"></span>Red</button>
+    <button class="color green" onclick="choose('Green')"><span class="dot"></span>Green</button>
+    <button class="color violet" onclick="choose('Violet')"><span class="dot"></span>Violet</button>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <div class="notice">Demo only: colour selection is for interface testing. No betting, deposits, cash prizes or withdrawals. Demo points have no cash value.</div>
+</section>
+
+<section class="panel">
+  <div class="panelhead"><h2>Colour activity</h2><span class="muted">Sample data</span></div>
+  <div class="status"><span>Demo session</span><span class="tag">Ready to explore</span></div>
+  <div class="status"><span>Selected colour</span><b id="selected">None yet</b></div>
+</section>
+
+<section class="panel">
+  <div class="panelhead"><h2>Recent colour samples</h2><span class="muted">Illustrative</span></div>
+  <div class="results">
+    <span class="ball" style="background:#08a94e">G</span><span class="ball" style="background:#e21d45">R</span>
+    <span class="ball" style="background:#8500d9">V</span><span class="ball" style="background:#08a94e">G</span>
+    <span class="ball" style="background:#e21d45">R</span><span class="ball" style="background:#8500d9">V</span>
+    <span class="ball" style="background:#08a94e">G</span><span class="ball" style="background:#e21d45">R</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="stats">
+    <div class="stat"><span>Colours available</span><b>03</b></div>
+    <div class="stat"><span>Demo selections</span><b id="count">00</b></div>
+  </div>
+</section>
+</div>
+<nav>
+  <a href="#"><b>⌂</b>Home</a><a href="#activity"><b>◷</b>Activity</a><a href="#points"><b>✧</b>Points</a><a href="#"><b>☻</b>Profile</a>
+</nav>
+<script>
+let selections=0;
+function choose(c){
+  selections++;
+  document.getElementById('selected').textContent=c;
+  document.getElementById('count').textContent=String(selections).padStart(2,'0');
+  const t=document.getElementById('toast');
+  t.textContent='You selected '+c+'. This is a demo selection only.';
+  t.style.display='block';
+}
+</script>
+</body>
+</html>
